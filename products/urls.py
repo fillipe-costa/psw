@@ -1,8 +1,11 @@
-from django.urls import path
+from django.urls import include, path
 from . import views
+from rest_framework import routers
+
+router = routers.DefaultRouter()
+router.register('', views.ProductViewSet)
 
 urlpatterns = [
+    path('', include(router.urls)),
 
-    path('', views.get_products_list), #rota GET que lista todos os produtos criados
-    path('<int:product_id>/', views.get_product) #rota GET que mostra os detalhes de um produto
 ]

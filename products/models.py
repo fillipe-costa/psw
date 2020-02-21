@@ -1,9 +1,15 @@
 from django.db import models
 
 # Create your models here.
+
+#model de produtos
 class Product(models.Model):
-    Name = models.CharField(max_length=12)
-    Description = models.TextField()
-    Price = models.FloatField()
-    Date = models.DateTimeField(auto_now_add = True)
-    Stock = models.IntegerField()
+    name = models.CharField(max_length=12)
+    description = models.TextField()
+    price = models.FloatField()
+    date = models.DateTimeField(auto_now_add = True)
+    stock = models.IntegerField()
+
+    #faz aparecer o nome do produto na tela do admin
+    def __str__(self):
+        return self.name

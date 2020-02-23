@@ -1,8 +1,10 @@
-from django.conf.urls import url
+from django.urls import include, path
 from . import views
+from accounts.views import registration_view
+from rest_framework import routers
 
 app_name = 'accounts'
 
 urlpatterns = [
-    # path('signup/', views.signup, name = "signup")
+    path('register', views.registration_view.as_view()),
 ]

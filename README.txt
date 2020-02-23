@@ -11,3 +11,6 @@ rotas:
 /products/{id}
 -exibe detalhes do produto com o id inserido
 -caso seja administrador permite alterar dados como preço e estoque ou deletar o produto
+
+/account/Register
+-registro de novo usuário comum

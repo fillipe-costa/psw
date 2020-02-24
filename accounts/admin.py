@@ -3,7 +3,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
 from .models import Costumer
 
-# Register your models here.
+# mostra o campo endereço no painel de admin
 class CostumerInLine(admin.StackedInline):
     model = Costumer
     can_delete = False

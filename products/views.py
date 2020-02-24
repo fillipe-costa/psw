@@ -5,9 +5,11 @@ from .models import Product
 from .permissions import IsOwnerOrReadOnly
 
 class ProductViewSet(viewsets.ModelViewSet):
+    
     queryset = Product.objects.all().order_by('id')
     permission_classes = (IsOwnerOrReadOnly,)
 
+    #retorna um serializer diferente para cada método
     def get_serializer_class(self):
         if self.action == 'retrieve':
             return ProductDetailsSerializer

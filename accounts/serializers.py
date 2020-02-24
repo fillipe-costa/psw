@@ -2,6 +2,7 @@ from rest_framework import serializers
 from accounts.models import Costumer
 from django.contrib.auth import get_user_model
 
+#serializer do campo de endereço
 class CostumerSerializer(serializers.ModelSerializer):
 
     address = serializers.CharField(max_length = 30)
@@ -10,6 +11,7 @@ class CostumerSerializer(serializers.ModelSerializer):
         model = Costumer
         fields = ('address',)
 
+#serializer do usuário
 class RegistrationSerializer(serializers.HyperlinkedModelSerializer):
 
     password = serializers.CharField(style = {'input_type':'password'}, write_only = True)
@@ -19,6 +21,7 @@ class RegistrationSerializer(serializers.HyperlinkedModelSerializer):
         model = get_user_model()
         fields = ('username', 'first_name', 'last_name', 'email', 'password', 'costumer')
 
+    #função de criar usuário
     def create(self, validated_data):
 
         profile_data = validated_data.pop('costumer')

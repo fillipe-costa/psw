@@ -6,5 +6,5 @@ from rest_framework import routers
 app_name = 'accounts'
 
 urlpatterns = [
-    path('register', views.registration_view.as_view()),
+    path('register', views.registration_view.as_view()), #rota de registro
 ]

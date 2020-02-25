@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Order
 from products.models import Product
 from django.contrib.auth import get_user_model
+from rest_framework.response import Response
 
 #listagem e detalhes dos pedidos
 class OrderSerializer(serializers.ModelSerializer):
@@ -19,6 +20,11 @@ class CreateOrderSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
 
+        #verifica estoque
+        product = Product.objects.get(id = validated_data['product'].id)
+        if (product.stock < validated_data['quantity']):
+            raise serializers.ValidationError('insufficient stock')
+
         #cria o pedido
         order = Order.objects.create(
             user = self.context['request'].user,
@@ -27,10 +33,7 @@ class CreateOrderSerializer(serializers.ModelSerializer):
             total_price = Product.objects.get(name = validated_data['product']).price * validated_data['quantity']
         )
 
-        #atualiza o estoque
-        product = Product.objects.get(id = order.product.id)
-        if (product.stock < order.quantity):
-            #erro
+        #atualiza estoque
         product.stock -= order.quantity
 
         product.save()
@@ -49,7 +52,7 @@ class UpdateOrderSerializer(serializers.ModelSerializer):
         #ajusta o estoque
         product = Product.objects.get(id = order.product.id)
         if product.stock < validated_data['quantity']:
-            #erro
+            raise serializers.ValidationError('insufficient stock')
         product.stock += order.quantity
         product.stock -= validated_data['quantity']
 

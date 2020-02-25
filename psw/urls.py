@@ -31,4 +31,7 @@ urlpatterns = [
 
     #rota de contas
     path('accounts/', include('accounts.urls')),
+
+    #rota de pedidos
+    path('orders/', include('orders.urls')),
 ]

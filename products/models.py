@@ -1,7 +1,5 @@
 from django.db import models
 
-# Create your models here.
-
 #model de produtos
 class Product(models.Model):
     name = models.CharField(max_length=12)

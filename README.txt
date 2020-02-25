@@ -12,6 +12,14 @@ rotas:
 -exibe detalhes do produto com o id inserido(GET)
 -caso seja administrador permite alterar dados como preço e estoque ou deletar o produto
 
+/orders
+-exibe a lista de todos os pedidos do usuário logado
+-permite a criação de novos pedidos
+
+/orders/{id}
+- exibe detalhes do pedido com id inserido
+- permite alterar a quantidade pedida ou deletar o pedido
+
 /account/Register
 -registro de novo usuário comum
 

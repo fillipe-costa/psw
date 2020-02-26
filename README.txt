@@ -20,6 +20,10 @@ rotas:
 - exibe detalhes do pedido com id inserido
 - permite alterar a quantidade pedida ou deletar o pedido
 
+/orders/{id}/checkout
+-Permite a alteração do campo 'paid' de false para true
+-Gera um PDF contendo detalhes do pedido e endereço de entrega
+
 /account/Register
 -registro de novo usuário comum
 

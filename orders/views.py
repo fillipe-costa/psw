@@ -1,11 +1,18 @@
 from django.shortcuts import render
 from rest_framework import viewsets
-from .serializers import OrderSerializer, CreateOrderSerializer, UpdateOrderSerializer
+from .serializers import OrderSerializer, CreateOrderSerializer, UpdateOrderSerializer, CheckoutSerializer
 from .models import Order
 from products.models import Product
+from accounts.models import Costumer
 from .permissions import IsOrderOwner
-
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import action
+from rest_framework.response import Response
+
+import io
+from django.http import FileResponse
+from reportlab.pdfgen import canvas
+from reportlab.lib.units import mm
 
 class OrderViewSet(viewsets.ModelViewSet):
 
@@ -18,6 +25,8 @@ class OrderViewSet(viewsets.ModelViewSet):
             return CreateOrderSerializer
         elif self.action == 'update':
             return UpdateOrderSerializer
+        elif self.action == 'checkout':
+            return CheckoutSerializer
         else:
             return OrderSerializer
 
@@ -26,7 +35,7 @@ class OrderViewSet(viewsets.ModelViewSet):
             return self.queryset.filter(user = self.request.user)
         return self.queryset
 
-
+    #destroi pedido
     def destroy(self, request, *args, **kwargs):
 
         order = self.get_object()
@@ -38,3 +47,38 @@ class OrderViewSet(viewsets.ModelViewSet):
         product.save()
 
         self.perform_destroy(order)
+
+    #função de pagamento de pedidos
+    @action(detail = True, methods = ['put'], name = 'checkout')
+    def checkout(self, request, pk):
+
+        order = self.get_object()
+
+        if (order.paid == True):
+            return Response('already paid')
+
+        order.paid = 'True'
+
+        order.save()
+
+        costumer = Costumer.objects.get(user_id = order.user.id)
+
+
+        buffer = io.BytesIO()
+        p = canvas.Canvas(buffer)
+
+        #gera PDF
+        textobject = p.beginText(0 * mm, 280 * mm)
+        textobject.setFont('Times-Roman', 8)
+        textobject.textLine(text='{ Product: ' + str(order.product)
+        + ' Quantity: ' + str(order.quantity)
+        + ' Price: ' + str(order.total_price)
+        + ' Address: ' + costumer.address + ' }'
+        )
+        p.drawText(textobject)
+
+        p.showPage()
+        p.save()
+
+        buffer.seek(io.SEEK_SET)
+        return FileResponse(buffer, as_attachment=True, filename='receipt.pdf')

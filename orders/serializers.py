@@ -62,3 +62,8 @@ class UpdateOrderSerializer(serializers.ModelSerializer):
         order.save()
 
         return order
+
+class CheckoutSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = ()
